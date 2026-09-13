@@ -2,26 +2,26 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ═══════════════════════════════════════════ -->
-    <!-- COLOR PALETTE — GitHub-Inspired Deep Dark   -->
+    <!-- COLOR PALETTE — ZeroUI Obsidian Dark Tokens -->
     <!-- ═══════════════════════════════════════════ -->
 
-    <Color x:Key="BgDark">#0D1117</Color>
-    <Color x:Key="BgMedium">#161B22</Color>
-    <Color x:Key="BgLight">#1C2333</Color>
-    <Color x:Key="BgCard">#1E2637</Color>
-    <Color x:Key="BgElevated">#252D3D</Color>
+    <Color x:Key="BgDark">#11131F</Color>
+    <Color x:Key="BgMedium">#181A28</Color>
+    <Color x:Key="BgLight">#1D2034</Color>
+    <Color x:Key="BgCard">#181A28</Color>
+    <Color x:Key="BgElevated">#262A44</Color>
 
-    <Color x:Key="AccentBlue">#58A6FF</Color>
-    <Color x:Key="AccentCyan">#56D4DD</Color>
-    <Color x:Key="AccentGreen">#3FB950</Color>
-    <Color x:Key="AccentOrange">#D29922</Color>
-    <Color x:Key="AccentRed">#F85149</Color>
-    <Color x:Key="AccentPurple">#BC8CFF</Color>
+    <Color x:Key="AccentBlue">#6366F1</Color>
+    <Color x:Key="AccentCyan">#38BDF8</Color>
+    <Color x:Key="AccentGreen">#A6E3A1</Color>
+    <Color x:Key="AccentOrange">#F9E2AF</Color>
+    <Color x:Key="AccentRed">#F38BA8</Color>
+    <Color x:Key="AccentPurple">#A78BFA</Color>
 
-    <Color x:Key="TextPrimary">#E6EDF3</Color>
-    <Color x:Key="TextSecondary">#7D8590</Color>
-    <Color x:Key="TextMuted">#484F58</Color>
-    <Color x:Key="BorderColor">#30363D</Color>
+    <Color x:Key="TextPrimary">#F1F5F9</Color>
+    <Color x:Key="TextSecondary">#94A3B8</Color>
+    <Color x:Key="TextMuted">#64748B</Color>
+    <Color x:Key="BorderColor">#2E344E</Color>
 
     <!-- Brushes -->
     <SolidColorBrush x:Key="BgDarkBrush" Color="{StaticResource BgDark}" />
@@ -44,13 +44,13 @@
 
     <!-- Gradient Brushes -->
     <LinearGradientBrush x:Key="TitleBarGradient" StartPoint="0,0" EndPoint="1,0">
-        <GradientStop Color="#161B22" Offset="0"/>
-        <GradientStop Color="#1A2233" Offset="1"/>
+        <GradientStop Color="#11131F" Offset="0"/>
+        <GradientStop Color="#181A28" Offset="1"/>
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="StartButtonGradient" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#3FB950" Offset="0"/>
-        <GradientStop Color="#2EA043" Offset="1"/>
+        <GradientStop Color="#6366F1" Offset="0"/>
+        <GradientStop Color="#4F46E5" Offset="1"/>
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="StopButtonGradient" StartPoint="0,0" EndPoint="0,1">
