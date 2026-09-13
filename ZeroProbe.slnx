@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/ZeroProbe.UI/ZeroProbe.UI.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ZeroProbe.Tests/ZeroProbe.Tests.csproj" />
+  </Folder>
 </Solution>
