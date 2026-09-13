@@ -1,20 +1,70 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
+using ZeroProbe.UI.ViewModels;
 
 namespace ZeroProbe.UI.Modules.ApiClient.Services
 {
-    public class EnvironmentVariableItem
+    public class EnvironmentVariableItem : ViewModelBase
     {
-        public string Key { get; set; } = string.Empty;
-        public string Value { get; set; } = string.Empty;
-        public bool IsEnabled { get; set; } = true;
+        private string _key = string.Empty;
+        private string _value = string.Empty;
+        private bool _isEnabled = true;
+
+        public string Key
+        {
+            get => _key;
+            set => SetProperty(ref _key, value);
+        }
+
+        public string Value
+        {
+            get => _value;
+            set => SetProperty(ref _value, value);
+        }
+
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
+
+        public EnvironmentVariableItem() { }
+
+        public EnvironmentVariableItem(string key, string value, bool isEnabled = true)
+        {
+            _key = key;
+            _value = value;
+            _isEnabled = isEnabled;
+        }
     }
 
-    public class ApiEnvironment
+    public class ApiEnvironment : ViewModelBase
     {
-        public string Name { get; set; } = "Default";
-        public List<EnvironmentVariableItem> Variables { get; set; } = new();
+        private string _name = "Default";
+
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value);
+        }
+
+        public ObservableCollection<EnvironmentVariableItem> Variables { get; } = new();
+
+        public ApiEnvironment() { }
+
+        public ApiEnvironment(string name, IEnumerable<EnvironmentVariableItem>? variables = null)
+        {
+            _name = name;
+            if (variables != null)
+            {
+                foreach (var v in variables)
+                {
+                    Variables.Add(v);
+                }
+            }
+        }
     }
 
     public class EnvironmentManager
@@ -35,7 +85,7 @@ namespace ZeroProbe.UI.Modules.ApiClient.Services
             return _activeVariables.TryGetValue(key.Trim(), out var val) ? val : null;
         }
 
-        public void LoadEnvironment(ApiEnvironment environment)
+        public void LoadEnvironment(ApiEnvironment? environment)
         {
             _activeVariables.Clear();
             if (environment == null) return;
@@ -47,6 +97,11 @@ namespace ZeroProbe.UI.Modules.ApiClient.Services
                     _activeVariables[item.Key.Trim()] = item.Value ?? string.Empty;
                 }
             }
+        }
+
+        public void SyncFromEnvironment(ApiEnvironment? environment)
+        {
+            LoadEnvironment(environment);
         }
 
         /// <summary>

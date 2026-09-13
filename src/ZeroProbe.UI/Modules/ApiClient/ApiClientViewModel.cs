@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,7 +16,13 @@ namespace ZeroProbe.UI.Modules.ApiClient
     public class ApiClientViewModel : ToolViewModelBase
     {
         private readonly HttpApiClientService _apiService = new();
+        private readonly EnvironmentManager _envManager = new();
         private CancellationTokenSource? _activeCts;
+
+        // Environment & Variables
+        public EnvironmentManager EnvironmentMgr => _envManager;
+        public ObservableCollection<ApiEnvironment> Environments { get; } = new();
+        private ApiEnvironment? _selectedEnvironment;
 
         // Request Configuration
         private string _method = "GET";
@@ -49,6 +55,29 @@ namespace ZeroProbe.UI.Modules.ApiClient
             AvailableBodyModes = Enum.GetValues<BodyMode>().ToList();
             AvailableAuthModes = Enum.GetValues<AuthMode>().ToList();
 
+            // Default Environments
+            var noEnv = new ApiEnvironment("No Environment");
+            var devEnv = new ApiEnvironment("Development (Localhost)", new[]
+            {
+                new EnvironmentVariableItem("baseUrl", "http://localhost:5000"),
+                new EnvironmentVariableItem("token", "dev_secret_token_12345")
+            });
+            var jsonPlaceholderEnv = new ApiEnvironment("JSONPlaceholder Cloud", new[]
+            {
+                new EnvironmentVariableItem("baseUrl", "https://jsonplaceholder.typicode.com"),
+                new EnvironmentVariableItem("postId", "1")
+            });
+            var httpBinEnv = new ApiEnvironment("HttpBin Inspection", new[]
+            {
+                new EnvironmentVariableItem("baseUrl", "https://httpbin.org")
+            });
+
+            Environments.Add(noEnv);
+            Environments.Add(devEnv);
+            Environments.Add(jsonPlaceholderEnv);
+            Environments.Add(httpBinEnv);
+            SelectedEnvironment = jsonPlaceholderEnv;
+
             // Default Headers
             Headers.Add(new HttpHeaderItem("Accept", "application/json", true));
             Headers.Add(new HttpHeaderItem("User-Agent", "ZeroProbe/2.0", true));
@@ -61,6 +90,9 @@ namespace ZeroProbe.UI.Modules.ApiClient
             RemoveParamCommand = new RelayCommand(p => { if (p is HttpQueryParamItem item) QueryParams.Remove(item); });
             AddHeaderCommand = new RelayCommand(_ => Headers.Add(new HttpHeaderItem("", "", true)));
             RemoveHeaderCommand = new RelayCommand(h => { if (h is HttpHeaderItem item) Headers.Remove(item); });
+            AddVariableCommand = new RelayCommand(_ => SelectedEnvironment?.Variables.Add(new EnvironmentVariableItem("", "", true)));
+            RemoveVariableCommand = new RelayCommand(v => { if (v is EnvironmentVariableItem item) SelectedEnvironment?.Variables.Remove(item); });
+            ImportCurlCommand = new RelayCommand(DoImportCurl);
             FormatJsonBodyCommand = new RelayCommand(DoFormatJsonBody);
             CopyResponseCommand = new RelayCommand(DoCopyResponse);
             ClearHistoryCommand = new RelayCommand(_ => History.Clear());
@@ -227,18 +259,33 @@ namespace ZeroProbe.UI.Modules.ApiClient
 
         #endregion
 
-        #region Commands
+        public ApiEnvironment? SelectedEnvironment
+        {
+            get => _selectedEnvironment;
+            set
+            {
+                if (SetProperty(ref _selectedEnvironment, value))
+                {
+                    _envManager.LoadEnvironment(value);
+                    if (value != null)
+                    {
+                        StatusText = $"Môi trường hoạt động: {value.Name}";
+                    }
+                }
+            }
+        }
 
         public RelayCommand AddParamCommand { get; }
         public RelayCommand RemoveParamCommand { get; }
         public RelayCommand AddHeaderCommand { get; }
         public RelayCommand RemoveHeaderCommand { get; }
+        public RelayCommand AddVariableCommand { get; }
+        public RelayCommand RemoveVariableCommand { get; }
+        public RelayCommand ImportCurlCommand { get; }
         public RelayCommand FormatJsonBodyCommand { get; }
         public RelayCommand CopyResponseCommand { get; }
         public RelayCommand ClearHistoryCommand { get; }
         public RelayCommand LoadHistoryItemCommand { get; }
-
-        #endregion
 
         #region Execution
 
@@ -277,19 +324,34 @@ namespace ZeroProbe.UI.Modules.ApiClient
         {
             try
             {
+                _envManager.LoadEnvironment(SelectedEnvironment);
+
+                var finalUrl = _envManager.Interpolate(Url);
+                var finalParams = QueryParams.Select(p => new HttpQueryParamItem(
+                    _envManager.Interpolate(p.Key),
+                    _envManager.Interpolate(p.Value),
+                    p.IsEnabled)).ToList();
+                var finalHeaders = Headers.Select(h => new HttpHeaderItem(
+                    _envManager.Interpolate(h.Key),
+                    _envManager.Interpolate(h.Value),
+                    h.IsEnabled)).ToList();
+                var finalBody = _envManager.Interpolate(BodyText);
+                var finalAuthToken = _envManager.Interpolate(AuthToken);
+                var finalApiKeyValue = _envManager.Interpolate(ApiKeyValue);
+
                 var response = await _apiService.SendAsync(
                     Method,
-                    Url,
-                    QueryParams,
-                    Headers,
+                    finalUrl,
+                    finalParams,
+                    finalHeaders,
                     BodyMode,
-                    BodyText,
+                    finalBody,
                     AuthMode,
-                    AuthToken,
+                    finalAuthToken,
                     AuthUser,
                     AuthPass,
                     ApiKeyName,
-                    ApiKeyValue,
+                    finalApiKeyValue,
                     TimeoutSeconds,
                     ct);
 
@@ -326,12 +388,12 @@ namespace ZeroProbe.UI.Modules.ApiClient
                     {
                         Timestamp = DateTime.Now,
                         Method = Method,
-                        Url = Url,
+                        Url = finalUrl,
                         StatusCode = response.StatusCode,
                         StatusDescription = response.StatusDescription,
                         ElapsedMs = response.ElapsedMs,
                         SizeBytes = response.SizeBytes,
-                        RequestBody = BodyText,
+                        RequestBody = finalBody,
                         BodyMode = BodyMode,
                         AuthMode = AuthMode
                     });
@@ -370,6 +432,63 @@ namespace ZeroProbe.UI.Modules.ApiClient
                     IsRunning = false;
                     RaiseCommandStates();
                 });
+            }
+        }
+
+        private void DoImportCurl(object? _)
+        {
+            var owner = Application.Current?.MainWindow;
+            var dialog = new CurlImportDialog();
+            if (owner != null) dialog.Owner = owner;
+            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.CurlCommand))
+            {
+                ApplyCurl(dialog.CurlCommand);
+            }
+        }
+
+        public void ApplyCurl(string curlCommand)
+        {
+            try
+            {
+                var parsed = CurlParserService.Parse(curlCommand);
+                if (!string.IsNullOrEmpty(parsed.Method))
+                    Method = parsed.Method;
+                if (!string.IsNullOrEmpty(parsed.Url))
+                    Url = parsed.Url;
+                if (!string.IsNullOrEmpty(parsed.Body))
+                {
+                    BodyText = parsed.Body;
+                    BodyMode = parsed.BodyMode;
+                }
+                if (parsed.AuthMode != AuthMode.None)
+                {
+                    AuthMode = parsed.AuthMode;
+                    if (parsed.AuthMode == AuthMode.Bearer)
+                        AuthToken = parsed.AuthToken;
+                }
+                if (parsed.Headers.Count > 0)
+                {
+                    foreach (var h in parsed.Headers)
+                    {
+                        var existing = Headers.FirstOrDefault(x => x.Key.Equals(h.Key, StringComparison.OrdinalIgnoreCase));
+                        if (existing != null)
+                        {
+                            existing.Value = h.Value;
+                            existing.IsEnabled = true;
+                        }
+                        else
+                        {
+                            Headers.Add(h);
+                        }
+                    }
+                }
+                StatusText = $"Đã nhập cURL thành công: {Method} {Url}";
+                AddLog($"[cURL] Imported: {Method} {Url} ({parsed.Headers.Count} headers, body: {parsed.BodyMode})");
+            }
+            catch (Exception ex)
+            {
+                StatusText = $"Lỗi phân tích cURL: {ex.Message}";
+                AddLog($"[cURL] Parse Error: {ex.Message}");
             }
         }
 
