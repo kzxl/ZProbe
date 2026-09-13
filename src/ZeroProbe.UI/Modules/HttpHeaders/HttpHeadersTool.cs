@@ -1,0 +1,25 @@
+﻿using System.Windows;
+using ZeroProbe.UI.Core;
+
+namespace ZeroProbe.UI.Modules.HttpHeaders
+{
+    public class HttpHeadersTool : ITool
+    {
+        private HttpHeadersViewModel? _viewModel;
+
+        public string Name => "HTTP Headers";
+        public string Icon => "📋";
+        public string Description => "Inspect HTTP response headers & TLS info";
+        public string Group => "Web";
+        public int Order => 50;
+
+        public ToolViewModelBase ViewModel => _viewModel ??= new HttpHeadersViewModel();
+
+        public FrameworkElement CreateView()
+        {
+            var view = new HttpHeadersPanel();
+            view.DataContext = ViewModel;
+            return view;
+        }
+    }
+}
