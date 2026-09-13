@@ -33,11 +33,12 @@ Adding a new tool = 1 folder + 1 line register. Zero changes to existing code.
 
 ---
 
-## 🛠️ Tools (11)
+## 🛠️ Tools (12)
 
 ### 🌐 Web
 | Tool | Description |
 |------|-------------|
+| ⚡ **API Client** | Interactive Postman-style REST tester with Params, Headers, Body, Auth, & JSON pretty-print |
 | 🚀 **API Load Test** | HTTP stress testing, RPS/latency charts, ramp-up, export CSV/JSON |
 | 📋 **HTTP Headers** | Response headers, TLS info, response time |
 | 🔐 **SSL Checker** | Certificate chain, expiry status, cipher suite, DNS names |

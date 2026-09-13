@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using NetTool.UI.Core;
+using NetTool.UI.Modules.ApiClient;
 using NetTool.UI.Modules.DnsLookup;
 using NetTool.UI.Modules.GeoIP;
 using NetTool.UI.Modules.HttpHeaders;
@@ -24,6 +25,7 @@ namespace NetTool.UI.ViewModels
         public ShellViewModel()
         {
             // ── Web ─────────────────────────────────
+            ToolRegistry.Register(new ApiClientTool());
             ToolRegistry.Register(new LoadTestTool());
             ToolRegistry.Register(new HttpHeadersTool());
             ToolRegistry.Register(new SSLTool());
