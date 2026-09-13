@@ -1,20 +1,20 @@
-# 🌌 NetTool — Network Testing Suite
+# 🌌 ZeroProbe — Industrial Network Diagnostic & Testing Suite
 
 <p align="center">
-  <strong>All-in-one network diagnostic & testing toolkit</strong><br/>
-  WPF Dark UI + Go Engine • 11 Tools • Universe Architecture
+  <strong>All-in-one network diagnostic & testing toolkit for industrial, enterprise, and developer environments</strong><br/>
+  WPF Dark UI + Go Engine • 11 Built-in Tools • Universe Plugin Architecture
 </p>
 
 ---
 
 ## 📖 Overview
 
-**NetTool** is a modular network toolkit with 11 built-in tools, powered by a Go engine backend and a premium WPF dark-themed UI.
+**ZeroProbe** is a high-performance modular network diagnostic suite powered by a lightweight Go engine backend and a modern WPF dark-themed desktop interface. As part of the sovereign **ZeroUniverse** ecosystem, it delivers deep visibility into network latency, connectivity, security certificates, and topology without external runtime bloat.
 
 | Component | Tech Stack | Role |
-|-----------|-----------|------|
-| **UI** | C# WPF (.NET 8) + LiveCharts2 | Dark theme UI, realtime charts, grouped tabs |
-| **Engine** | Go (stdlib) | Network operations, JSON stdout streaming |
+| :--- | :--- | :--- |
+| **UI** | C# WPF (.NET 8) + LiveCharts2 | Dark theme UI, realtime charts, telemetry graphs, grouped tabs |
+| **Engine** | Go (stdlib) | Concurrent network operations, packet inspection, JSON stdout streaming |
 
 ### Architecture — Universe Plugin System
 
@@ -71,8 +71,8 @@ Adding a new tool = 1 folder + 1 line register. Zero changes to existing code.
 
 ```bash
 # Clone
-git clone https://github.com/kzxl/NetTool.git
-cd NetTool
+git clone https://github.com/kzxl/ZeroProbe.git
+cd ZeroProbe
 
 # Build Go Engine
 cd engine && go build -o ../engine.exe . && cd ..
@@ -83,7 +83,7 @@ dotnet run --project src/NetTool.UI
 
 ### Using Pre-built Release
 
-Download from [Releases](https://github.com/kzxl/NetTool/releases):
+Download from [Releases](https://github.com/kzxl/ZeroProbe/releases):
 - **Full** — Self-contained, no runtime needed (~70MB)
 - **Lite** — Requires .NET 8 Desktop Runtime (~10MB)
 
@@ -92,7 +92,7 @@ Download from [Releases](https://github.com/kzxl/NetTool/releases):
 ## 📁 Project Structure
 
 ```
-NetTool/
+ZeroProbe/
 ├── engine/                              # Go Engine (11 commands)
 │   ├── main.go                          # Entry + dispatcher
 │   ├── cmd_loadtest.go                  # API load testing
@@ -143,11 +143,11 @@ NetTool/
 
 ## ⚠️ Disclaimer
 
-> This tool is for **legitimate testing purposes only.**
-> Do not use it to attack external systems (DDoS).
+> This tool is for **legitimate diagnostic & testing purposes only.**
+> Do not use it to attack external systems.
 
 ---
 
 ## 📄 License
 
-MIT License
+Released under the **MIT License**. Part of the **ZeroUniverse** sovereign computing initiative.
