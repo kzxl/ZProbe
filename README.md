@@ -1,10 +1,10 @@
-# 🌌 ZeroProbe — Industrial Network Diagnostic & Testing Suite
+﻿# 🌌 ZProbe — Industrial Network Diagnostic & Testing Suite
 
 <p align="center">
-  <a href="https://github.com/kzxl/ZeroProbe"><img src="https://img.shields.io/badge/Type-Desktop%20Application-007ACC?style=flat-square&logo=windows" alt="Type: Desktop App" /></a>
-  <a href="https://github.com/kzxl/ZeroProbe"><img src="https://img.shields.io/badge/Ecosystem-Zero%20Universe-8A2BE2?style=flat-square" alt="Ecosystem: Zero Universe" /></a>
-  <a href="https://github.com/kzxl/ZeroProbe"><img src="https://img.shields.io/badge/Platform-Windows%20x64-brightgreen?style=flat-square" alt="Platform: Windows x64" /></a>
-  <a href="https://github.com/kzxl/ZeroProbe"><img src="https://img.shields.io/badge/Distribution-Standalone%20Single--File-2ea44f?style=flat-square" alt="Distribution: Standalone Single-File" /></a>
+  <a href="https://github.com/kzxl/ZProbe"><img src="https://img.shields.io/badge/Type-Desktop%20Application-007ACC?style=flat-square&logo=windows" alt="Type: Desktop App" /></a>
+  <a href="https://github.com/kzxl/ZProbe"><img src="https://img.shields.io/badge/Ecosystem-Zero%20Universe-8A2BE2?style=flat-square" alt="Ecosystem: Zero Universe" /></a>
+  <a href="https://github.com/kzxl/ZProbe"><img src="https://img.shields.io/badge/Platform-Windows%20x64-brightgreen?style=flat-square" alt="Platform: Windows x64" /></a>
+  <a href="https://github.com/kzxl/ZProbe"><img src="https://img.shields.io/badge/Distribution-Standalone%20Single--File-2ea44f?style=flat-square" alt="Distribution: Standalone Single-File" /></a>
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
 
 ## 📖 Overview
 
-**ZeroProbe** is a high-performance modular network diagnostic suite powered by a lightweight Go engine backend and a modern WPF dark-themed desktop interface. As part of the sovereign **ZeroUniverse** ecosystem, it delivers deep visibility into network latency, connectivity, security certificates, and topology without external runtime bloat.
+**ZProbe** is a high-performance modular network diagnostic suite powered by a lightweight Go engine backend and a modern WPF dark-themed desktop interface. As part of the sovereign **ZeroUniverse** ecosystem, it delivers deep visibility into network latency, connectivity, security certificates, and topology without external runtime bloat.
 
 | Component | Tech Stack | Role |
 | :--- | :--- | :--- |
@@ -80,8 +80,8 @@ Adding a new tool = 1 folder + 1 line register. Zero changes to existing code.
 
 ```bash
 # Clone
-git clone https://github.com/kzxl/ZeroProbe.git
-cd ZeroProbe
+git clone https://github.com/kzxl/ZProbe.git
+cd ZProbe
 
 # Build Go Engine
 cd engine && go build -o ../engine.exe . && cd ..
@@ -92,7 +92,7 @@ dotnet run --project src/NetTool.UI
 
 ### Using Pre-built Release
 
-Download from [Releases](https://github.com/kzxl/ZeroProbe/releases):
+Download from [Releases](https://github.com/kzxl/ZProbe/releases):
 - **Full** — Self-contained, no runtime needed (~70MB)
 - **Lite** — Requires .NET 8 Desktop Runtime (~10MB)
 
@@ -101,7 +101,7 @@ Download from [Releases](https://github.com/kzxl/ZeroProbe/releases):
 ## 📁 Project Structure
 
 ```
-ZeroProbe/
+ZProbe/
 ├── engine/                              # Go Engine (11 commands)
 │   ├── main.go                          # Entry + dispatcher
 │   ├── cmd_loadtest.go                  # API load testing
